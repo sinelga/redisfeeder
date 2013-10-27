@@ -39,8 +39,7 @@ func feeder(resp http.ResponseWriter, req *http.Request, callback string) {
 		log.Fatal(err)
 	}
 
-	//	bitem, _ := redis.Bytes(c.Do("ZRANGE", "testqueue", "0", "1"))
-	bitem, _ := redis.Strings(c.Do("ZRANGE", "testqueue", "0", "10"))
+	bitem, _ := redis.Strings(c.Do("ZREVRANGE", "it_IT:news", "0", "12"))
 
 	var itemsarr []domains.Item
 
@@ -52,8 +51,7 @@ func feeder(resp http.ResponseWriter, req *http.Request, callback string) {
 		err := json.Unmarshal(b, &itemobj)
 		if err != nil {
 			log.Fatal(err)
-		}
-		log.Println(itemobj.ImgLink)
+		}	
 		itemsarr = append(itemsarr, itemobj)
 
 	}

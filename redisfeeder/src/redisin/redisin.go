@@ -16,7 +16,7 @@ func InsertIn(itemarr []domains.Item) {
 		log.Fatal(err)
 	}
 
-	queuename := "testqueue"
+	queuename := "it_IT:news"
 
 	for _, item := range itemarr {
 		//

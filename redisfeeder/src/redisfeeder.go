@@ -54,7 +54,7 @@ func main() {
 			if len(res2) > 0 {
 
 				var title string
-				var con string
+				var cont string
 				var imglink string
 
 				title = res2[0].Attr("title")
@@ -66,17 +66,17 @@ func main() {
 				} else {
 
 					//					fmt.Println(i, creanstr(res3[0].InnerHtml()))
-					con = creanstr(res3[0].InnerHtml())
+					cont = creanstr(res3[0].InnerHtml())
 
 				}
 
-				if len(title) > 3 && len(imglink) > 10 && len(con) > 5 {
+				if len(title) > 3 && len(imglink) > 10 && len(cont) > 5 {
 
 					item := domains.Item{
 
 						Title:   title,
 						ImgLink: imglink,
-						Con:     con,
+						Cont:     cont,
 					}
 
 					itemarr = append(itemarr, item)

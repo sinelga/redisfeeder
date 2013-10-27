@@ -7,7 +7,7 @@ import (
 type Item struct {
 
 	Title string
-	Con string
+	Cont string
 	ImgLink string
 	
 }
