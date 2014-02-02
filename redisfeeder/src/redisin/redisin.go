@@ -19,7 +19,7 @@ func InsertIn(itemarr []domains.Item) {
 	queuename := "it_IT:news"
 
 	for _, item := range itemarr {
-		//
+
 		bitem, err := json.Marshal(item)
 		if err != nil {
 			fmt.Println("error:", err)

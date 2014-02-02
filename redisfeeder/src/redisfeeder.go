@@ -7,9 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
 	"domains"
-
 	"redisin"
 	"strings"
 
