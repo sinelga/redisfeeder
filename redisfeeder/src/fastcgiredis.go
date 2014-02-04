@@ -51,7 +51,7 @@ func feeder(resp http.ResponseWriter, req *http.Request, callback string) {
 		err := json.Unmarshal(b, &itemobj)
 		if err != nil {
 			log.Fatal(err)
-		}	
+		}
 		itemsarr = append(itemsarr, itemobj)
 
 	}

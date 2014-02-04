@@ -1,6 +1,7 @@
 package main
 
 import (
+	"domains"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -8,8 +9,10 @@ import (
 	"log"
 	"log/syslog"
 	"net/http"
-	//    "domains"
 	"parsebypath"
+	"redisin"
+//	"strings"
+	"time"
 )
 
 const APP_VERSION = "0.1"
@@ -50,11 +53,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	//    golog.Info(string(bodybytes))
-
-	//    var jItems domains.Ysqlquery
 	var jItems map[string]map[string]interface{}
-	//	var jItems  map[string]interface{}
 
 	err = json.Unmarshal(bodybytes, &jItems)
 	if err != nil {
@@ -66,59 +65,43 @@ func main() {
 
 	itemsii := items["item"].([]interface{})
 
-	var linksarr []string
+	var itemsarr []domains.Item
 
 	for _, ii := range itemsii {
 
-		//    	fmt.Println(ii)
+		var item domains.Item
 
 		iii := ii.(map[string]interface{})
 
-		//    	fmt.Println(iii["guid"])
+		pubDatestr := iii["pubDate"].(string)
 
+		pubDate, err := time.Parse(time.RFC1123, pubDatestr)
+		if err != nil {
+			golog.Err(err.Error())
+
+		}
+
+		item.PubDate = pubDate
+		title := iii["title"].(string)
+		item.Title = title
 		iiii := iii["guid"].(map[string]interface{})
+		link := iiii["content"].(string)
+		item.Link = link
 
-		//    	fmt.Println(iiii["content"])
-
-		linksarr = append(linksarr, iiii["content"].(string))
-
+		itemsarr = append(itemsarr, item)
 	}
 
-	for _, link := range linksarr {
+	xpaths := []string{"//div[@class='photo']", "//div[@class='description lp_links']/p"}
 
-		fmt.Println(link)
+	itemsarrfull := parsebypath.Parse(*golog, itemsarr, xpaths)
 
-	}
-
-	parsebypath.Parse(*golog, "http://qn.quotidiano.net/curiosita/2014/01/30/1018121-elisabetta-rolls-royce-bentley.shtml", "//div[@class='photo']")
-
-	//    for i := range jItems["query"]{
-	//
-	//    	item := jItems["query"][i]
-	//
-	//
-	//    	if i == "results" {
-	//    		fmt.Println(i)
-	//    		fmt.Println(item["item"])
-	//    		itemii := item.(map[string])
-	//
-	//    	}
-	//
-	//
-	//
-	//    }
-
-	//    byt := []byte(`{"num":6.13,"strs":["a","b"]}`)
-	//
-	//    var dat map[string]interface{}
-	//
-	//    if err := json.Unmarshal(byt, &dat); err != nil {
-	//        panic(err)
-	//    }
-	//    fmt.Println(dat)
-
-	//    jItems.
-
-	//    fmt.Printf(jItems.query.results.item[0].title )
+//	for _, item := range itemsarrfull {
+//
+//		fmt.Println(item.Link)
+//		fmt.Println(item.ImgLink)
+//
+//	}
+	
+	redisin.InsertIn(itemsarrfull) 
 
 }

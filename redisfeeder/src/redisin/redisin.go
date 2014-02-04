@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"log"
-	"time"
+//	"time"
 )
 
 func InsertIn(itemarr []domains.Item) {
@@ -27,7 +27,8 @@ func InsertIn(itemarr []domains.Item) {
 		//		os.Stdout.Write(b)
 		fmt.Println(string(bitem))
 
-		if pgq, err := c.Do("ZADD", queuename,time.Now().Unix(), bitem); err != nil {
+//		if pgq, err := c.Do("ZADD", queuename,time.Now().Unix(), bitem); err != nil {
+		if pgq, err := c.Do("ZADD", queuename,item.PubDate.Unix(), bitem); err != nil {
 			log.Fatal(err)
 
 		} else {
