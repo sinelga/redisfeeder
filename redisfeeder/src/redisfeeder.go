@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"domains"
-	"redisin"
+//	"redisin"
 	"strings"
 
 //	"os"
@@ -86,7 +86,7 @@ func main() {
 		}
 			
 	}
-	redisin.InsertIn(itemarr)
+//	redisin.InsertIn(itemarr)
 	
 
 }

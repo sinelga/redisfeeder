@@ -2,7 +2,6 @@ package parsebypath
 
 import (
 	"domains"
-//	"fmt"
 	"github.com/moovweb/gokogiri"
 	"io/ioutil"
 	"log/syslog"
@@ -10,79 +9,83 @@ import (
 	"strings"
 )
 
-func Parse(golog syslog.Writer, itemsarr []domains.Item, xpath []string) []domains.Item{
+func Parse(golog syslog.Writer, redisidItemsarr []domains.RedisidItems, xpath []string) []domains.RedisidItems {
 
 	client := &http.Client{}
-	
-	var returnitemsarr []domains.Item
-	
-	for _, item := range itemsarr {
+	var redisidItemsarrret []domains.RedisidItems
 
-		newitem := item
-		
-		req, err := http.NewRequest("GET", item.Link, nil)
-		if err != nil {
+	for _, redisidItems := range redisidItemsarr {
 
-			golog.Err(err.Error())
+		var redisidItemsret domains.RedisidItems
 
-		}
+		redisidItemsret.RedisID = redisidItems.RedisID
 
-		resp, err := client.Do(req)
-		if err != nil {
-	
-			golog.Err(err.Error())
-		}
+		var returnitemsarr []domains.Item
 
-		defer resp.Body.Close()
-		bodybytes, err := ioutil.ReadAll(resp.Body)
+		for _, item := range redisidItems.Items {
 
-		if err != nil {
-			golog.Err(err.Error())
-		}
-		doc, _ := gokogiri.ParseHtml([]byte(bodybytes))
-		res, _ := doc.Search(xpath[0])
+			newitem := item
 
-		for _, itemdom := range res {
+			req, err := http.NewRequest("GET", item.Link, nil)
+			if err != nil {
+				golog.Err(err.Error())
 
-			if res2, err := itemdom.Search("img"); err != nil {
+			}
+
+			resp, err := client.Do(req)
+			if err != nil {
 
 				golog.Err(err.Error())
-			} else {
-
-				imglink := res2[0].Attr("src")
-				newitem.ImgLink = imglink 
-
 			}
 
-		}
+			defer resp.Body.Close()
+			bodybytes, err := ioutil.ReadAll(resp.Body)
 
-		res, _ = doc.Search(xpath[1])
+			if err != nil {
+				golog.Err(err.Error())
+			}
+			doc, _ := gokogiri.ParseHtml([]byte(bodybytes))
+			res, _ := doc.Search(xpath[0])
 
-		var cont string
-		for i, itemdom := range res {
+			for _, itemdom := range res {
 
-			if i == 0 {
-			cont = itemdom.Content()
-			} else {
-			
-				cont = cont+" " +itemdom.Content()
+				if res2, err := itemdom.Search("img"); err != nil {
+
+					golog.Err(err.Error())
+				} else {
+
+					imglink := res2[0].Attr("src")
+					newitem.ImgLink = imglink
+
+				}
 			}
 
-		}
-		
-		newitem.Cont = cont
-		
-		if strings.HasSuffix(newitem.ImgLink, ".JPG") {
-//			fmt.Println(newitem.ImgLink[strings.Index(newitem.ImgLink, "images"):len(newitem.ImgLink)])
+			res, _ = doc.Search(xpath[1])
 
-			imgLink := newitem.Link[0:strings.Index(newitem.Link, "-")] + "/" + newitem.ImgLink[strings.Index(newitem.ImgLink, "images"):len(newitem.ImgLink)]
-//			fmt.Println(imgLink)
-			newitem.ImgLink = imgLink 
-			
-			returnitemsarr =append(returnitemsarr,newitem)
+			var cont string
+			for i, itemdom := range res {
 
+				if i == 0 {
+					cont = itemdom.Content()
+				} else {
+
+					cont = cont + " " + itemdom.Content()
+				}
+			}
+
+			newitem.Cont = cont
+
+			if strings.HasSuffix(newitem.ImgLink, ".JPG") {
+				imgLink := newitem.Link[0:strings.Index(newitem.Link, "-")] + "/" + newitem.ImgLink[strings.Index(newitem.ImgLink, "images"):len(newitem.ImgLink)]
+				newitem.ImgLink = imgLink
+				returnitemsarr = append(returnitemsarr, newitem)
+
+			}
+			redisidItemsret.Items = returnitemsarr
 		}
+
+		redisidItemsarrret = append(redisidItemsarrret, redisidItemsret)
 
 	}
-	return returnitemsarr
+	return redisidItemsarrret
 }

@@ -9,16 +9,23 @@ import (
 //	"time"
 )
 
-func InsertIn(itemarr []domains.Item) {
+//func InsertIn(itemarr []domains.Item) {
+  func InsertIn(redisidItemsarr []domains.RedisidItems) {	
 
 	c, err := redis.Dial("tcp", ":6379")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	queuename := "it_IT:news"
+	
+	for _,redisidItems := range redisidItemsarr {
 
-	for _, item := range itemarr {
+//	var queuename string		
+	queuename := redisidItems.RedisID
+	
+	
+
+	for _, item := range redisidItems.Items {
 
 		bitem, err := json.Marshal(item)
 		if err != nil {
@@ -27,7 +34,6 @@ func InsertIn(itemarr []domains.Item) {
 		//		os.Stdout.Write(b)
 		fmt.Println(string(bitem))
 
-//		if pgq, err := c.Do("ZADD", queuename,time.Now().Unix(), bitem); err != nil {
 		if pgq, err := c.Do("ZADD", queuename,item.PubDate.Unix(), bitem); err != nil {
 			log.Fatal(err)
 
@@ -38,5 +44,5 @@ func InsertIn(itemarr []domains.Item) {
 		}
 
 	}
-
+}
 }
