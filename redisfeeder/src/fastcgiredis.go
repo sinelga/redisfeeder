@@ -58,7 +58,7 @@ func feeder(golog syslog.Writer, resp http.ResponseWriter, req *http.Request, ca
 
 	}
 
-	bitem, _ := redis.Strings(c.Do("ZREVRANGE", redisidconv, "0", "12"))
+	bitem, _ := redis.Strings(c.Do("ZREVRANGE", redisidconv, "0", "25"))
 
 	var itemsarr []domains.Item
 
