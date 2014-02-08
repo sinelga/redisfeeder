@@ -44,7 +44,7 @@ func main() {
 
 func feeder(golog syslog.Writer, resp http.ResponseWriter, req *http.Request, callback string, redisid string) {
 
-	redisidconv := strings.Replace(redisid, "%3", ":", -1)
+	redisidconv := strings.Replace(redisid, "%3A", ":", -1)
 
 	golog.Info("redisid-> " + redisidconv)
 	c, err := redis.Dial("tcp", ":6379")
