@@ -16,8 +16,9 @@ type FastCGIServer struct{}
 func (s FastCGIServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 
 	callback := req.Header.Get("X-CALLBACK")
+	redisid := req.Header.Get("X-REDISID")
 
-	feeder(resp, req, callback)
+	feeder(resp, req, callback,redisid)
 
 }
 
@@ -32,14 +33,20 @@ func main() {
 	fcgi.Serve(listener, srv)
 }
 
-func feeder(resp http.ResponseWriter, req *http.Request, callback string) {
+func feeder(resp http.ResponseWriter, req *http.Request, callback string,redisid string) {
 
 	c, err := redis.Dial("tcp", ":6379")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	bitem, _ := redis.Strings(c.Do("ZREVRANGE", "it_IT:news", "0", "12"))
+	
+	if redisid == "" {
+	
+		redisid = "it_IT:news:Home"
+		
+	}
+	
+	bitem, _ := redis.Strings(c.Do("ZREVRANGE", redisid, "0", "12"))
 
 	var itemsarr []domains.Item
 
