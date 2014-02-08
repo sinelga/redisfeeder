@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
 	"log"
+	"log/syslog"
 	"net"
 	"net/http"
 	"net/http/fcgi"
@@ -15,10 +16,17 @@ type FastCGIServer struct{}
 
 func (s FastCGIServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 
+	golog, err := syslog.New(syslog.LOG_ERR, "golog")
+
+	defer golog.Close()
+	if err != nil {
+		log.Fatal("error writing syslog!!")
+	}
+
 	callback := req.Header.Get("X-CALLBACK")
 	redisid := req.Header.Get("X-REDISID")
 
-	feeder(resp, req, callback,redisid)
+	feeder(*golog,resp, req, callback,redisid)
 
 }
 
@@ -33,8 +41,10 @@ func main() {
 	fcgi.Serve(listener, srv)
 }
 
-func feeder(resp http.ResponseWriter, req *http.Request, callback string,redisid string) {
+func feeder(golog syslog.Writer,resp http.ResponseWriter, req *http.Request, callback string,redisid string) {
 
+	golog.Info("redisid-> "+redisid)
+	
 	c, err := redis.Dial("tcp", ":6379")
 	if err != nil {
 		log.Fatal(err)
