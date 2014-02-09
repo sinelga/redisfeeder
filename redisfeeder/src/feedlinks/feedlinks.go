@@ -30,7 +30,6 @@ func GetLinks(golog syslog.Writer, csvfile string) []domains.FeedLinks {
 				panic(err)
 			}
 
-//			golog.Info(fields[0])
 			feedLinks.RedisID = fields[0]
 			feedLinks.YQLlink = fields[1]
 			feedLinksarr = append(feedLinksarr,feedLinks)
