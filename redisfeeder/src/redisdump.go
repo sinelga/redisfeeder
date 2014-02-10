@@ -12,7 +12,7 @@ import (
 	//	"os"
 	"dumpkeyinfile"
 	"getkeysfromredis"
-	"time"
+//	"time"
 )
 
 const APP_VERSION = "0.1"
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	lastdumpdate := lastdump.GetLastDate(*golog)
-	println(lastdumpdate.Format(time.RFC1123))
+//	println(lastdumpdate.Format(time.RFC1123))
 
 	c, err := redis.Dial("tcp", ":6379")
 	if err != nil {
