@@ -9,7 +9,6 @@ import (
 //	"time"
 )
 
-//func InsertIn(itemarr []domains.Item) {
   func InsertIn(redisidItemsarr []domains.RedisidItems) {	
 
 	c, err := redis.Dial("tcp", ":6379")
@@ -19,10 +18,8 @@ import (
 
 	
 	for _,redisidItems := range redisidItemsarr {
-
-//	var queuename string		
-	queuename := redisidItems.RedisID
 	
+	queuename := redisidItems.RedisID
 	
 
 	for _, item := range redisidItems.Items {

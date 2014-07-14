@@ -7,6 +7,7 @@ import (
 	"log/syslog"
 	"net/http"
 	"time"
+//	"fmt"
 )
 
 func Parser(golog syslog.Writer, feedLinksarr []domains.FeedLinks) []domains.RedisidItems{
@@ -41,14 +42,19 @@ func Parser(golog syslog.Writer, feedLinksarr []domains.FeedLinks) []domains.Red
 		}
 		var jItems map[string]map[string]interface{}
 
+		
+
 		err = json.Unmarshal(bodybytes, &jItems)
 		if err != nil {
 			golog.Err(err.Error())
 		}
 
+	
 		items := jItems["query"]["results"].(map[string]interface{})
-
+		
 		itemsii := items["item"].([]interface{})
+		
+//		fmt.Println(itemsii[0])	
 		
 		var itemsarr []domains.Item
 
@@ -67,9 +73,12 @@ func Parser(golog syslog.Writer, feedLinksarr []domains.FeedLinks) []domains.Red
 			}
 			item.PubDate = pubDate
 			title := iii["title"].(string)
+//			fmt.Println(title)
 			item.Title = title
+			
 			iiii := iii["guid"].(map[string]interface{})
 			link := iiii["content"].(string)
+//			fmt.Println(link)
 			item.Link = link
 			itemsarr = append(itemsarr, item)
 		}
