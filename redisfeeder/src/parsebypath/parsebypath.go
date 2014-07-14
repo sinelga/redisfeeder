@@ -63,7 +63,7 @@ func Parse(golog syslog.Writer, redisidItemsarr []domains.RedisidItems, xpath []
 						//				imgLink := newitem.Link[0:strings.Index(newitem.Link, "-")] + "/" + newitem.ImgLink[strings.Index(newitem.ImgLink, "images"):len(newitem.ImgLink)]
 						//				newitem.ImgLink = imgLink
 						newitem.ImgLink = "http://www.quotidiano.net" + newitem.ImgLink
-						returnitemsarr = append(returnitemsarr, newitem)
+						//						returnitemsarr = append(returnitemsarr, newitem)
 
 						res, _ = doc.Search(xpath[1])
 
@@ -76,19 +76,14 @@ func Parse(golog syslog.Writer, redisidItemsarr []domains.RedisidItems, xpath []
 
 								cont = cont + " " + itemdom.Content()
 							}
-						newitem.Cont = cont
+							newitem.Cont = cont
 
-						
-							
 						}
-						
-						if newitem.ImgLink !="" && newitem.Cont !="" {
+
+						if newitem.ImgLink != "" && newitem.Cont != "" {
 							returnitemsarr = append(returnitemsarr, newitem)
-						
-						
-						}
-						
 
+						}
 
 					}
 
