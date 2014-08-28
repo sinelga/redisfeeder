@@ -90,31 +90,6 @@ func Parse(golog syslog.Writer, redisidItemsarr []domains.RedisidItems, xpath []
 				}
 			}
 
-			//			res, _ = doc.Search(xpath[1])
-
-			//			var cont string
-			//			for i, itemdom := range res {
-			//
-			//				if i == 0 {
-			//					cont = itemdom.Content()
-			//				} else {
-			//
-			//					cont = cont + " " + itemdom.Content()
-			//				}
-			//			}
-			//
-			//			newitem.Cont = cont
-
-			//			if strings.HasSuffix(newitem.ImgLink, ".JPG") {
-			//			if strings.HasSuffix(newitem.ImgLink, ".jpg") && strings.HasPrefix(item.Link,"http://www.quotidiano.net") {
-
-			//			if strings.HasSuffix(newitem.ImgLink, ".jpg") {
-			//				imgLink := newitem.Link[0:strings.Index(newitem.Link, "-")] + "/" + newitem.ImgLink[strings.Index(newitem.ImgLink, "images"):len(newitem.ImgLink)]
-			//				newitem.ImgLink = imgLink
-			//				newitem.ImgLink ="http://www.quotidiano.net" +newitem.ImgLink
-			//				returnitemsarr = append(returnitemsarr, newitem)
-
-			//			}
 			redisidItemsret.Items = returnitemsarr
 		}
 
